@@ -18,7 +18,7 @@ CPU: Intel i76820HQ
 
 ## Benchmark code
 
-Forgive overhead of calling rand() and modulus by 29. This is a necessary evil because if I hardcoded the values, the compiler compute the results in compile-time, resulting a no-op for first 2 benchmarks. It seems that compiler cannot achieve the same feat in compile-time with std::div();
+Forgive overhead of calling rand() and modulus by 29. This is a necessary evil because if I hardcoded the values, the compiler compute the results in compile-time, resulting a no-op for first 2 benchmarks. It seems that compiler cannot achieve the same feat in compile-time with std::div().
 
 ```Cpp
 long long total_result = 0L;
