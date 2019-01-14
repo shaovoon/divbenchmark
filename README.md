@@ -13,6 +13,7 @@ We'll put std::div() to test in this benchmark.
 * Visual C++ 15.9 Update
 
 OS: Windows 10 Pro
+
 CPU: Intel i76820HQ
 
 ## Benchmark code
@@ -29,7 +30,7 @@ for (int i = 0; i < MAX_LOOPS; ++i)
     divisor = (num % 29) + 1;
     result.quot = num / divisor;
     result.rem = num % divisor;
-    total_result += result.quot + result.rem;
+    total_result += result.quot + result.rem; // prevent optimize away
 }
 stopwatch.stop();
 
@@ -40,7 +41,7 @@ for (int i = 0; i < MAX_LOOPS; ++i)
     num = rand();
     divisor = (num % 29) + 1;
     result = my_div(num, divisor);
-    total_result += result.quot + result.rem;
+    total_result += result.quot + result.rem; // prevent optimize away
 }
 stopwatch.stop();
 print_result(total_result);
@@ -53,7 +54,7 @@ for (int i = 0; i < MAX_LOOPS; ++i)
     num = rand();
     divisor = (num % 29) + 1;
     result = std::div(num, divisor);
-    total_result += result.quot + result.rem;
+    total_result += result.quot + result.rem; // prevent optimize away
 }
 stopwatch.stop();
 

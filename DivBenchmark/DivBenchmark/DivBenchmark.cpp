@@ -50,7 +50,7 @@ int main()
 
 	int num = 0;
 	int divisor = 0;
-	srand(curr_time);
+	srand(curr_time); // reset srand with same seed
 	stopwatch.start("Division and Modulus");
 	for (int i = 0; i < MAX_LOOPS; ++i)
 	{
@@ -58,33 +58,33 @@ int main()
 		divisor = (num % 29) + 1;
 		result.quot = num / divisor;
 		result.rem = num % divisor;
-		total_result += result.quot + result.rem;
+		total_result += result.quot + result.rem; // prevent optimize away
 	}
 	stopwatch.stop();
 	print_result(total_result);
 
 	total_result = 0L;
-	srand(curr_time);
+	srand(curr_time); // reset srand with same seed
 	stopwatch.start("Custom div function");
 	for (int i = 0; i < MAX_LOOPS; ++i)
 	{
 		num = rand();
 		divisor = (num % 29) + 1;
 		result = my_div(num, divisor);
-		total_result += result.quot + result.rem;
+		total_result += result.quot + result.rem; // prevent optimize away
 	}
 	stopwatch.stop();
 	print_result(total_result);
 
 	total_result = 0L;
-	srand(curr_time);
+	srand(curr_time); // reset srand with same seed
 	stopwatch.start("std::div function");
 	for (int i = 0; i < MAX_LOOPS; ++i)
 	{
 		num = rand();
 		divisor = (num % 29) + 1;
 		result = std::div(num, divisor);
-		total_result += result.quot + result.rem;
+		total_result += result.quot + result.rem; // prevent optimize away
 	}
 	stopwatch.stop();
 	print_result(total_result);
