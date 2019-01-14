@@ -90,7 +90,7 @@ Custom div function timing:535ms
 std::div function timing:529ms
 ```
 
-On unoptimized GCC and Clang binary, std::div() is faster than my_div() and slightly faster than the individual division and modulus. For VC++, there is no difference between my_div() and std::div(); individual division and modulus is faster probably due to no function call overhead.
+On unoptimized GCC and Clang binary, std::div() is faster than my_div() and slightly faster than the individual division and modulus. For VC++, there is no difference between my_div() and std::div(); individual division and modulus is faster probably due to no overhead of function call.
 
 ## Optimized Benchmark
 
