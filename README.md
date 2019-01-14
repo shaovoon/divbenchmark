@@ -16,6 +16,8 @@ OS: Windows 10 Pro
 
 CPU: Intel i76820HQ
 
+Loops: 10 millions
+
 ## Benchmark code
 
 Forgive overhead of calling rand() and modulus by 29. This is a necessary evil because if I hardcoded the values, the compiler compute the results in compile-time, resulting a no-op for first 2 benchmarks. It seems that compiler cannot achieve the same feat in compile-time with std::div().
