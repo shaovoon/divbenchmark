@@ -12,6 +12,7 @@ We'll put std::div() to test in this benchmark.
 * Clang 5.0.1 on Cygwin
 * Visual C++ 15.9 Update
 
+OS: Windows 10 Pro
 CPU: Intel i76820HQ
 
 ## Benchmark code
