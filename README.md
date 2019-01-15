@@ -1,6 +1,8 @@
 # C++ 11 std::div Benchmark
 
-C++11 standard introduces std::div() and its siblings on the premise of some compiler can take advantage of the available machine code that compute quotient and remainder of division together. The [C++ reference](https://en.cppreference.com/w/cpp/numeric/math/div) noted,
+C++11 standard introduces std::div() and its siblings on the premise of some compiler can take advantage of the available machine code that compute quotient and remainder of division together. The [C++ reference](https://en.cppreference.com/w/cpp/numeric/math/div) noted, and (updated) according to Petr Kobal&iacute;ček, this function was never about performance but rounding direction of negative operands. We thank him for his comment.
+
+_Until C++11, the rounding direction of the quotient and the sign of the remainder in the built-in division and remainder operators was implementation-defined if either of the operands was negative, but it was well-defined in std::div._
 
 _On many platforms, a single CPU instruction obtains both the quotient and the remainder, and this function may leverage that, although compilers are generally able to merge nearby / and % where suitable._
 
