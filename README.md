@@ -1,5 +1,7 @@
 # C++ 11 std::div Benchmark
 
+__Update: rand() overhead in benchmark has been removed by computing the array beforehand.__
+
 C++11 standard introduces std::div() and its siblings on the premise of some compiler can take advantage of the available machine code that compute quotient and remainder of division together. The [C++ reference](https://en.cppreference.com/w/cpp/numeric/math/div) noted, and (updated) according to Petr Kobal&iacute;ček, this function was never about performance but rounding direction of negative operands. We thank him for his comment.
 
 _Until C++11, the rounding direction of the quotient and the sign of the remainder in the built-in division and remainder operators was implementation-defined if either of the operands was negative, but it was well-defined in std::div._
@@ -22,46 +24,37 @@ Loops: 10 millions
 
 ## Benchmark code
 
-Forgive overhead of calling rand() and modulus by 29. This is a necessary evil because if I hardcoded the values, the compiler compute the results in compile-time, resulting a no-op for first 2 benchmarks. It seems that compiler cannot perform the same feat in compile-time with std::div().
-
 ```Cpp
 long long total_result = 0L;
-srand(curr_time); // reset srand with same seed
 stopwatch.start("Division and Modulus");
-for (int i = 0; i < MAX_LOOPS; ++i)
+for (size_t i = 0; i < vec.size(); ++i)
 {
-    num = rand();
-    divisor = (num % 29) + 1;
-    result.quot = num / divisor;
-    result.rem = num % divisor;
+    TwoNum& a = vec[i];
+    result.quot = a.num / a.divisor;
+    result.rem = a.num % a.divisor;
     total_result += result.quot + result.rem; // prevent optimize away
 }
 stopwatch.stop();
-
-srand(curr_time); // reset srand with same seed
-stopwatch.start("Custom div function");
-for (int i = 0; i < MAX_LOOPS; ++i)
-{
-    num = rand();
-    divisor = (num % 29) + 1;
-    result = my_div(num, divisor);
-    total_result += result.quot + result.rem; // prevent optimize away
-}
-stopwatch.stop();
-print_result(total_result);
 
 total_result = 0L;
-srand(curr_time); // reset srand with same seed
-stopwatch.start("std::div function");
-for (int i = 0; i < MAX_LOOPS; ++i)
+stopwatch.start("Custom div function");
+for (size_t i = 0; i < vec.size(); ++i)
 {
-    num = rand();
-    divisor = (num % 29) + 1;
-    result = std::div(num, divisor);
+    TwoNum& a = vec[i];
+    result = my_div(a.num, a.divisor);
     total_result += result.quot + result.rem; // prevent optimize away
 }
 stopwatch.stop();
 
+total_result = 0L;
+stopwatch.start("std::div function");
+for (size_t i = 0; i < vec.size(); ++i)
+{
+    TwoNum& a = vec[i];
+    result = std::div(a.num, a.divisor);
+    total_result += result.quot + result.rem; // prevent optimize away
+}
+stopwatch.stop();
 ```
 
 Custom div function is defined as below.
@@ -76,44 +69,44 @@ inline std::div_t my_div(int number, int divisior)
 ## Unoptimized Benchmark
 
 ```
-# g++ DivBenchmark.cpp 
-Division and Modulus timing:120ms
-Custom div function timing:154ms
-std::div function timing:106ms
+GCC Unoptimized
+Division and Modulus timing:108ms
+Custom div function timing:150ms
+std::div function timing:104ms
 
-# clang++ DivBenchmark.cpp -std=c++11 -stdlib=libc++
-Division and Modulus timing:149ms
-Custom div function timing:183ms
-std::div function timing:139ms
+Clang Unoptimized
+Division and Modulus timing:104ms
+Custom div function timing:184ms
+std::div function timing:102ms
 
-# VC++ 15.9 Optimization disabled(/Od)
-Division and Modulus timing:508ms
-Custom div function timing:535ms
-std::div function timing:529ms
+VC++ Unoptimized
+Division and Modulus timing:411ms
+Custom div function timing:465ms
+std::div function timing:427ms
 ```
 
-On unoptimized GCC and Clang binary, std::div() is faster than my_div() and slightly faster than the individual division and modulus. For VC++, there is no difference between my_div() and std::div(); individual division and modulus is faster probably due to no overhead of function call.
+On unoptimized GCC and Clang binary, std::div() is faster than my_div() and slightly faster than the individual division and modulus. For VC++, individual division and modulus is faster probably due to no overhead of function call.
 
 ## Optimized Benchmark
 
 ```
-# g++ DivBenchmark.cpp -O3
-Division and Modulus timing:61ms
-Custom div function timing:63ms
-std::div function timing:81ms
+GCC Optimized(O3)
+Division and Modulus timing:30ms
+Custom div function timing:34ms
+std::div function timing:56ms
 
-# clang++ DivBenchmark.cpp -O3 -std=c++11 -stdlib=libc++
-Division and Modulus timing:71ms
-Custom div function timing:77ms
-std::div function timing:92ms
+Clang Optimized(O3)
+Division and Modulus timing:31ms
+Custom div function timing:32ms
+std::div function timing:54ms
 
-# VC++ 15.9 Optimization enabled(/O2)(/Ot)
-Division and Modulus timing:385ms
-Custom div function timing:368ms
-std::div function timing:379ms
+VC++ Optimized(O2)(Ot)
+Division and Modulus timing:37ms
+Custom div function timing:52ms
+std::div function timing:66ms
 ```
 
-On optimized GCC and Clang binary, it is a shame that std::div() is consistently slower. For VC++, there is no difference after the score is averaged out multiple runs. In conclusion, today's compiler already does a very good job of computing division and modulus together without resorting to std::div() but std::div() still have the performance lead when it comes to unoptimized build.
+On optimized GCC and Clang binary, it is a shame that std::div() is consistently slower. In conclusion, today's compiler already does a very good job of computing division and modulus together without resorting to std::div() but std::div() still have the performance lead when it comes to unoptimized build.
 
 
 

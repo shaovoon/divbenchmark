@@ -37,10 +37,22 @@ void print_result(long long total_result)
 	printf("Random result: %ld <== Ignore this, print here to prevent operation optimized away.\n", total_result);
 }
 
+struct TwoNum
+{
+	int num;
+	int divisor;
+};
+
 int main()
 {
 	time_t curr_time = time(NULL);
 	const int MAX_LOOPS = 10000000;
+	std::vector<TwoNum> vec;
+	printf("Initializing array...\n");
+	for (int i = 0; i < MAX_LOOPS; ++i)
+	{
+		vec.push_back({ rand(), (rand()%29)+1 });
+	}
 
 	timer stopwatch;
 	std::int64_t n = 0;
@@ -48,42 +60,34 @@ int main()
 	long long total_result = 0L;
 	std::div_t result;
 
-	int num = 0;
-	int divisor = 0;
-	srand(curr_time); // reset srand with same seed
 	stopwatch.start("Division and Modulus");
-	for (int i = 0; i < MAX_LOOPS; ++i)
+	for (size_t i = 0; i < vec.size(); ++i)
 	{
-		num = rand();
-		divisor = (num % 29) + 1;
-		result.quot = num / divisor;
-		result.rem = num % divisor;
+		TwoNum& a = vec[i];
+		result.quot = a.num / a.divisor;
+		result.rem = a.num % a.divisor;
 		total_result += result.quot + result.rem; // prevent optimize away
 	}
 	stopwatch.stop();
 	print_result(total_result);
 
 	total_result = 0L;
-	srand(curr_time); // reset srand with same seed
 	stopwatch.start("Custom div function");
-	for (int i = 0; i < MAX_LOOPS; ++i)
+	for (size_t i = 0; i < vec.size(); ++i)
 	{
-		num = rand();
-		divisor = (num % 29) + 1;
-		result = my_div(num, divisor);
+		TwoNum& a = vec[i];
+		result = my_div(a.num, a.divisor);
 		total_result += result.quot + result.rem; // prevent optimize away
 	}
 	stopwatch.stop();
 	print_result(total_result);
 
 	total_result = 0L;
-	srand(curr_time); // reset srand with same seed
 	stopwatch.start("std::div function");
-	for (int i = 0; i < MAX_LOOPS; ++i)
+	for (size_t i = 0; i < vec.size(); ++i)
 	{
-		num = rand();
-		divisor = (num % 29) + 1;
-		result = std::div(num, divisor);
+		TwoNum& a = vec[i];
+		result = std::div(a.num, a.divisor);
 		total_result += result.quot + result.rem; // prevent optimize away
 	}
 	stopwatch.stop();
