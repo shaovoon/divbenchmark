@@ -1,6 +1,6 @@
 # C++ 11 std::div Benchmark
 
-__Update: rand() overhead in benchmark has been removed by computing the array beforehand.__
+__Update: rand() overhead in benchmark has been removed by filling the array with random values beforehand.__
 
 C++11 standard introduces std::div() and its siblings on the premise of some compiler can take advantage of the available machine code that compute quotient and remainder of division together. The [C++ reference](https://en.cppreference.com/w/cpp/numeric/math/div) noted, and (updated) according to Petr Kobal&iacute;ček, this function was never about performance but rounding direction of negative operands. We thank him for his comment.
 
