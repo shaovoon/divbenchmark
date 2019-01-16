@@ -106,7 +106,7 @@ Custom div function timing:52ms
 std::div function timing:66ms
 ```
 
-On optimized GCC and Clang binary, it is a shame that std::div() is consistently slower. In conclusion, today's compiler already does a very good job of computing division and modulus together without resorting to std::div() but std::div() still have the performance lead when it comes to unoptimized build.
+On optimized binary, it is a shame that std::div() is consistently slower. In conclusion, today's compiler already does a very good job of computing division and modulus together without resorting to std::div() but std::div() still have the performance lead when it comes to unoptimized build.
 
 
 
