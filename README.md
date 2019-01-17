@@ -100,10 +100,10 @@ Division and Modulus timing:31ms
 Custom div function timing:32ms
 std::div function timing:54ms
 
-VC++ Optimized(O2)(Ot)
-Division and Modulus timing:37ms
-Custom div function timing:52ms
-std::div function timing:66ms
+VC++ Optimized(Ox)(Ot)
+Division and Modulus timing:32ms
+Custom div function timing:41ms
+std::div function timing:50ms
 ```
 
 On optimized binary, it is a shame that std::div() is consistently slower. In conclusion, today's compiler already does a very good job of computing division and modulus together without resorting to std::div() but std::div() still have the performance lead when it comes to unoptimized build.
